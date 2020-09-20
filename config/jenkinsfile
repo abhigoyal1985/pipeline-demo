@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+
+    tools {
+        
+        maven "demo_maven_3.6.3"
+    }
+
+    stages {
+        stage('Git Pull ') {
+            steps {
+                git branch: 'main', url: 'https://github.com/spring-projects/spring-petclinic.git'
+
+                sh "mvn clean install"
+            }
+
+            post {
+                success {
+                    junit '**/target/surefire-reports/TEST-*.xml'
+                    archiveArtifacts 'target/*.jar'
+                }
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                    junit '**/target/surefire-reports/TEST-*.xml'
+                    archiveArtifacts 'target/*.jar'
+                
+            }
+        }
+        stage("Save build") {
+            steps {
+                script {
+                   
+                    sh "mv target/*.jar /mnt/artefact"
+                }
+            }
+        }
+    }
+}
