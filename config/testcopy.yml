@@ -1,0 +1,9 @@
+---
+- hosts: app-server
+  tasks:
+    - name: copy file to remote host
+      copy:
+        src: /mnt/artefact/
+        dest: /mnt/artefact/
+    - name: Start jar
+      shell: java -jar /mnt/artefact/*.jar &
